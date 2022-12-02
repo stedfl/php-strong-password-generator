@@ -1,3 +1,29 @@
+<?php
+
+if(isset($_GET['psw_length'])) {
+  var_dump($_GET['psw_length']);
+  if($_GET['psw_length'] > 7 && $_GET['psw_length'] < 33 ) {
+    $isCorrectLength = true;
+    
+  } else {
+    $isCorrectLength = false;
+  }
+  var_dump($isCorrectLength);
+}
+
+  
+
+?>
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,12 +39,15 @@
     <div class="container w-50 p-4 ">
       <h1 class="text-white text-center">Generatore Password Sicure</h1>
       <p class="text-white text-center">Genera una password sicura</p>
+      <?php if(!isset($_GET['psw_length']) || $isCorrectLength) : ?>
       <div class="msg info py-1 px-4">
         <p class="info-psw">Scegliere una password con un minimo di 8 ed un massimo di 32 caratteri</p>
       </div>
+      <?php elseif(!$isCorrectLength) :?>
       <div class="msg error py-1 px-4">
         <p class="error">Errore! La lunghezza della password deve essere compresa tra un minimo di 8 ed un massimo di 32 caratteri</p>
       </div>
+      <?php endif; ?>
       <div class="settings p-3 mt-3">
         <form action="" method="GET">
           <div class="d-flex align-items-center mb-3">
