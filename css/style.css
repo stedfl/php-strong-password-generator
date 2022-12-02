@@ -1,0 +1,26 @@
+body {
+  background-color: #01152e;
+}
+
+.main-wrap {
+  height: 100vh;
+}
+
+.msg {
+  border-radius: 5px;
+}
+
+.msg.info {
+  background-color: #c3e4f3;
+  color: #487b86;
+}
+
+.msg.error {
+  background-color: rgb(220, 162, 162);
+  color:rgb(231, 49, 49);
+}
+
+.settings {
+  background-color: aliceblue;
+  border-radius: 5px
+}
