@@ -1,15 +1,14 @@
 <?php
+require_once  __DIR__ . '/functions.php';
 
 $isCorrectLength = false;
 if(isset($_GET['psw_length'])) {
-  var_dump($_GET['psw_length']);
   if($_GET['psw_length'] > 7 && $_GET['psw_length'] < 33 ) {
     $isCorrectLength = true;
     
   } else {
     $isCorrectLength = false;
   }
-  var_dump($isCorrectLength);
 }
 
 $letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
@@ -19,25 +18,10 @@ $special_characters = ['!', '?', '&', '%', '$', '<', '>', '^', '+', '-', '*', '/
 
 $letNumbChar = array_merge($letters, $numbers, $special_characters);
 $password = '';
-
 if($isCorrectLength) {
-  $password = '';
-  for ($i=0; $i < $_GET['psw_length']; $i++) {
-    $randomIndex = rand(0, count($letNumbChar));
-    $password .= $letNumbChar[$randomIndex];
-  }
-  echo $password;
-};
-
+  $password = getRandomPsw($_GET['psw_length'], $letNumbChar);
+}
 ?>
-
-
-
-
-
-
-
-
 
 
 <!DOCTYPE html>
@@ -73,7 +57,11 @@ if($isCorrectLength) {
           <button class="btn btn-primary" type="submit">Invia</button>
           <button class="btn btn-secondary" type="reset">Annulla</button>
         </form>
+        <?php if($password !== '') : ?>
+        <h3>La tua password è: <?php echo $password ?> </h3>
+        <?php endif; ?>
       </div>
+      
     </div>
   </div>
   
