@@ -1,5 +1,6 @@
 <?php
 
+$isCorrectLength = false;
 if(isset($_GET['psw_length'])) {
   var_dump($_GET['psw_length']);
   if($_GET['psw_length'] > 7 && $_GET['psw_length'] < 33 ) {
@@ -17,8 +18,16 @@ $numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 $special_characters = ['!', '?', '&', '%', '$', '<', '>', '^', '+', '-', '*', '/', '(', ')', '[', ']', '{', '}', '@','#', '_', '='];
 
 $letNumbChar = array_merge($letters, $numbers, $special_characters);
+$password = '';
 
-  
+if($isCorrectLength) {
+  $password = '';
+  for ($i=0; $i < $_GET['psw_length']; $i++) {
+    $randomIndex = rand(0, count($letNumbChar));
+    $password .= $letNumbChar[$randomIndex];
+  }
+  echo $password;
+};
 
 ?>
 
