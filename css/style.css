@@ -24,3 +24,7 @@ body {
   background-color: aliceblue;
   border-radius: 5px
 }
+
+p.psw {
+  font-size: 1.5rem;
+}

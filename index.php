@@ -17,9 +17,11 @@ $numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 $special_characters = ['!', '?', '&', '%', '$', '<', '>', '^', '+', '-', '*', '/', '(', ')', '[', ']', '{', '}', '@','#', '_', '='];
 
 $letNumbChar = array_merge($letters, $numbers, $special_characters);
-$password = '';
+
 if($isCorrectLength) {
-  $password = getRandomPsw($_GET['psw_length'], $letNumbChar);
+  session_start();
+  $_SESSION['password'] = getRandomPsw($_GET['psw_length'], $letNumbChar);
+  header('Location: ./success.php');
 }
 ?>
 
@@ -39,32 +41,26 @@ if($isCorrectLength) {
     <div class="container w-50 p-4 ">
       <h1 class="text-white text-center">Generatore Password Sicure</h1>
       <p class="text-white text-center">Genera una password sicura</p>
-      <?php if(!isset($_GET['psw_length']) || $isCorrectLength) : ?>
-      <div class="msg info py-1 px-4">
-        <p class="info-psw">Scegliere una password con un minimo di 8 ed un massimo di 32 caratteri</p>
+      <?php if(!isset($_GET['psw_length'])) : ?>
+      <div class="msg info py-3 px-4">
+        <p class="info-psw mb-0">Scegliere una password con un minimo di 8 ed un massimo di 32 caratteri</p>
       </div>
       <?php elseif(!$isCorrectLength) :?>
-      <div class="msg error py-1 px-4">
-        <p class="error">Errore! La lunghezza della password deve essere compresa tra un minimo di 8 ed un massimo di 32 caratteri</p>
+      <div class="msg error py-3 px-4 ">
+        <p class="error mb-0">Errore! La lunghezza della password deve essere compresa tra un minimo di 8 ed un massimo di 32 caratteri</p>
       </div>
       <?php endif; ?>
       <div class="settings p-3 mt-3">
         <form action="" method="GET">
           <div class="d-flex align-items-center mb-3">
             <label for="exampleFormControlInput1" class="form-label me-2 w-50">Lunghezza password:</label>
-            <input type="number" name="psw_length" class="form-control w-25 " id="exampleFormControlInput1" placeholder="number">
+            <input type="number" name="psw_length" class="form-control w-25 " id="exampleFormControlInput1" placeholder="numero">
           </div>
           <button class="btn btn-primary" type="submit">Invia</button>
           <button class="btn btn-secondary" type="reset">Annulla</button>
         </form>
-        <?php if($password !== '') : ?>
-        <h3>La tua password è: <?php echo $password ?> </h3>
-        <?php endif; ?>
       </div>
-      
     </div>
   </div>
-  
-  
 </body>
 </html>
