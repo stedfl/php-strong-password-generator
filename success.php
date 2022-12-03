@@ -18,7 +18,7 @@
       <h1 class="text-white text-center mb-4">La password generata è</h1>
       <div class="msg info py-3 px-4">
         <p class="psw text-dark text-center mb-0">
-          <?php echo $_SESSION['password'] ?>
+          <?php echo htmlspecialchars($_SESSION['password']) ?>
         </p>
         <a href="./index.php" class="btn btn-info mt-3">Torna alla homepage</a>
       </div>

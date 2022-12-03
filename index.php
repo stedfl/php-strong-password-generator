@@ -13,44 +13,23 @@ if(isset($_GET['psw_length'])) {
   }
 }
 
-
-
-$letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-
-$numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-$special_characters = ['!', '?', '&', '%', '$', '<', '>', '^', '+', '-', '*', '/', '(', ')', '[', ']', '{', '}', '@','#', '_', '='];
+$charsets = [
+  "letters" => ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"],
+  "numbers" => ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+  "specials" => ['!', '?', '&', '%', '$', '<', '>', '^', '+', '-', '*', '/', '(', ')', '[', ']', '{', '}', '@','#', '_', '=']
+];
 
 session_start();
 $mergedArray = [];
-if($isCorrectLength && isset($_GET['characters'])) {
-  if(count($_GET['characters']) === 3 ) {
-    $mergedArray = array_merge($letters, $numbers, $special_characters);
-  } else if (count($_GET['characters']) === 2 ) {
-    if(in_array('0' , $_GET['characters']) && in_array('1' , $_GET['characters']) ) {
-      $mergedArray = array_merge($letters, $numbers);
-    } else if (in_array('0' , $_GET['characters']) && in_array('2' , $_GET['characters'])) {
-      $mergedArray = array_merge($letters, $special_characters);
-    } else {
-      $mergedArray = array_merge($numbers, $special_characters);
+
+if($isCorrectLength) {
+  if(isset($_GET['characters'])) {
+    foreach($_GET['characters'] as $charset_key) {
+      $mergedArray = array_merge($mergedArray, $charsets[$charset_key]);
     }
   } else {
-    if(in_array('1' , $_GET['characters'])) {
-      if ($_GET['psw_length'] > count($numbers)) {
-        $_GET['psw_length'] = count($numbers);
-      }
-      $mergedArray = $numbers;
-    } else if (in_array('2' , $_GET['characters'])) {
-      if ($_GET['psw_length'] > count($special_characters)) {
-        $_GET['psw_length'] = count($special_characters);
-      }
-      $mergedArray = $special_characters;
-    } else {
-      $mergedArray = $letters;
-    }
+    $mergedArray = array_merge($charsets['letters'], $charsets['numbers'], $charsets['specials']);
   }
-  $_SESSION['password'] = getRandomPsw($_GET['psw_length'], $mergedArray );
-} else if (($isCorrectLength && !isset($_GET['characters']))) {
-  $mergedArray = array_merge($letters, $numbers, $special_characters);
   $_SESSION['password'] = getRandomPsw($_GET['psw_length'], $mergedArray );
 }
 
@@ -88,31 +67,48 @@ if($isCorrectLength && isset($_GET['characters'])) {
             <input type="number" name="psw_length" class="form-control w-25 " id="exampleFormControlInput1" placeholder="numero">
           </div>
 
-          <div class="d-flex align-items-center my-5">
+          <div class="d-flex align-items-center mt-5">
             <label for="exampleFormControlInput1" class="form-label me-2 w-50">Scegli se includere:</label>
             <div class="check">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="0" name="characters[]" id="flexCheckIndeterminateDisabled">
+                <input class="form-check-input" type="checkbox" value="letters" name="characters[]" id="flexCheckIndeterminateDisabled">
                 <label class="form-check-label" for="flexCheckIndeterminateDisabled">
                   Lettere
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="1" name="characters[]" id="flexCheckIndeterminateDisabled">
+                <input class="form-check-input" type="checkbox" value="numbers" name="characters[]" id="flexCheckIndeterminateDisabled">
                 <label class="form-check-label" for="flexCheckIndeterminateDisabled">
                   Numeri
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="2" name="characters[]" id="flexCheckIndeterminateDisabled">
+                <input class="form-check-input" type="checkbox" value="specials" name="characters[]" id="flexCheckIndeterminateDisabled">
                 <label class="form-check-label" for="flexCheckIndeterminateDisabled">
                   Caratteri speciali
                 </label>
               </div>
             </div>
           </div>
+          <div class="d-flex align-items-center mt-5">
+            <label for="exampleFormControlInput1" class="form-label me-2 w-50">Consenti o no ripetizione dei caratteri:</label>
+            <div class="radio">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="random" value="false" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1" >
+                  Si
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="random" value="true" id="flexRadioDefault2" >
+                <label class="form-check-label" for="flexRadioDefault2">
+                  No
+                </label>
+              </div>
+            </div>
+          </div>
           
-          <div class="buttons">
+          <div class="buttons mt-5">
             <button class="btn btn-primary" type="submit">Invia</button>
             <button class="btn btn-secondary" type="reset">Annulla</button>
           </div>
