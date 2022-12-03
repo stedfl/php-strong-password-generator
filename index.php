@@ -1,15 +1,15 @@
 <?php
 require_once  __DIR__ . '/functions.php';
 
-$isCorrectLength = false;
-
+$is_correct_length = false;
+$min_psw_len = 8;
+$max_psw_len = 32;
 
 if(isset($_GET['psw_length'])) {
-  if($_GET['psw_length'] > 7 && $_GET['psw_length'] < 33 ) {
-    $isCorrectLength = true;
-    
+  if($_GET['psw_length'] >= $min_psw_len && $_GET['psw_length'] <= $max_psw_len) {
+    $is_correct_length = true;
   } else {
-    $isCorrectLength = false;
+    $is_correct_length = false;
   }
 }
 
@@ -20,19 +20,29 @@ $charsets = [
 ];
 
 session_start();
-$mergedArray = [];
+$merged_array = [];
 
-if($isCorrectLength) {
+if($is_correct_length) {
   if(isset($_GET['characters'])) {
     foreach($_GET['characters'] as $charset_key) {
-      $mergedArray = array_merge($mergedArray, $charsets[$charset_key]);
+      $merged_array = array_merge($merged_array, $charsets[$charset_key]);
     }
   } else {
-    $mergedArray = array_merge($charsets['letters'], $charsets['numbers'], $charsets['specials']);
+    $merged_array = array_merge($charsets['letters'], $charsets['numbers'], $charsets['specials']);
   }
-  $_SESSION['password'] = getRandomPsw($_GET['psw_length'], $mergedArray );
-}
 
+  if($_GET['psw_length'] > count($merged_array)) {
+    $new_length = count($merged_array);
+  } else {
+    $new_length = $_GET['psw_length'];
+  }
+
+  if(isset($_GET['ripetition']) && $_GET['ripetition'] === 'false') {
+    $_SESSION['password'] = getUniqueRandowPsw($new_length, $merged_array);
+  } else {
+    $_SESSION['password'] = getRandomPsw($new_length, $merged_array);
+  }
+}
 ?>
 
 
@@ -55,9 +65,9 @@ if($isCorrectLength) {
       <div class="msg info py-3 px-4">
         <p class="info-psw mb-0">Scegliere una password con un minimo di 8 ed un massimo di 32 caratteri</p>
       </div>
-      <?php elseif(!$isCorrectLength) :?>
+      <?php elseif(!$is_correct_length) :?>
       <div class="msg error py-3 px-4 ">
-        <p class="error mb-0">Errore! La lunghezza della password deve essere compresa tra un minimo di 8 ed un massimo di 32 caratteri</p>
+        <p class="error mb-0">Errore! La lunghezza della password deve essere compresa tra un minimo di <?php echo $min_psw_len ?> ed un massimo di <?php echo $max_psw_len ?> caratteri</p>
       </div>
       <?php endif; ?>
       <div class="settings p-3 mt-3">
@@ -94,13 +104,13 @@ if($isCorrectLength) {
             <label for="exampleFormControlInput1" class="form-label me-2 w-50">Consenti o no ripetizione dei caratteri:</label>
             <div class="radio">
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="random" value="false" id="flexRadioDefault1">
+                <input class="form-check-input" type="radio" name="ripetition" value="true" id="flexRadioDefault1">
                 <label class="form-check-label" for="flexRadioDefault1" >
                   Si
                 </label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="random" value="true" id="flexRadioDefault2" >
+                <input class="form-check-input" type="radio" name="ripetition" value="false" id="flexRadioDefault2" >
                 <label class="form-check-label" for="flexRadioDefault2">
                   No
                 </label>
